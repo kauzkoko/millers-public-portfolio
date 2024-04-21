@@ -1,0 +1,410 @@
+<template>
+	<!-- Webcam -->
+	<div class="K0-20-container">
+		<div class="K0-20-main">
+			<DirectionController
+				:noTop="true"
+				:noRight="false"
+				:noBottom="false"
+				:noLeft="false"
+			/>
+			<Popcorn
+				id="random-popcorn1"
+				:style="{
+					left: random1 + '%',
+					top: random2 + '%',
+					transform: 'scale(0.8)',
+				}"
+			/>
+			<Popcorn
+				id="random-popcorn2"
+				:style="{
+					left: random3 + '%',
+					top: random4 + '%',
+					transform: 'scale(0.8)',
+				}"
+			/>
+			<Popcorn
+				id="random-popcorn3"
+				:style="{
+					left: random5 + '%',
+					top: random6 + '%',
+					transform: 'scale(0.8)',
+				}"
+			/>
+			<div
+				v-for="i in 5"
+				class="K0-20-gadget"
+				v-bind:style="{
+					left: getRandomInt(10, 90) + '%',
+					top: getRandomInt(10, 80) + '%',
+				}"
+			>
+				<img
+					v-bind:class="[gadgetClass, animClasses[getRandomInt(0, 8)]]"
+					:src="gadgets[getRandomInt(0, 9)]"
+					@click="consoli()"
+				/>
+			</div>
+			<div
+				class="animate__animated animate__slideInDown K0-20-wolke1"
+				v-bind:style="{
+					left: getRandomInt(0, 20) + '%',
+					top: getRandomInt(-10, 0) + '%',
+				}"
+			>
+				<img class="K0-20-img2" src="~static/images/objects/wolke1.png" />
+			</div>
+			<div
+				class="animate__animated animate__slideInLeft K0-20-wolke2"
+				v-bind:style="{
+					left: getRandomInt(10, 30) + '%',
+					top: getRandomInt(-10, 0) + '%',
+				}"
+			>
+				<img class="K0-20-img2" src="~static/images/objects/wolke2.png" />
+			</div>
+			<div
+				class="animate__animated animate__slideInDown K0-20-wolke3"
+				v-bind:style="{
+					right: getRandomInt(10, 30) + '%',
+					top: getRandomInt(-10, 0) + '%',
+				}"
+			>
+				<img class="K0-20-img2" src="~static/images/objects/wolke1.png" />
+			</div>
+			<div
+				class="animate__animated animate__slideInRight K0-20-wolke4"
+				v-bind:style="{
+					right: getRandomInt(0, 20) + '%',
+					top: getRandomInt(-10, 0) + '%',
+				}"
+			>
+				<img class="K0-20-img2" src="~static/images/objects/wolke2.png" />
+			</div>
+			<div
+				class="K0-20-path"
+				v-bind:style="{
+					'background-image': 'url(' + pathBgs[getRandomInt(0, 4)] + ')',
+				}"
+			></div>
+			<div
+				class="K0-20-bg"
+				v-bind:style="{ 'background-color': 'rgb(' + r + ',' + g + ',' + b + ')' }"
+			></div>
+			<SpielfeldSlotScaler :scale="0.25">
+				<template v-slot:content> </template>
+			</SpielfeldSlotScaler>
+		</div>
+	</div>
+</template>
+
+<script>
+import getRandomInt from "~/assets/javascript/helpers.js";
+
+export default {
+	mounted() {
+		for (let sound in this.$sounds) {
+			this.$sounds[sound].stop();
+		}
+		setTimeout(() => {
+			this.$sounds.zoobackground.sound.value._loop = true;
+			this.$sounds.zoobackground.play();
+		}, 500);
+		if (this.howManyPopcorn == 1) {
+			this.random1 = getRandomInt(10, 90);
+			this.random2 = getRandomInt(10, 90);
+		} else if (this.howManyPopcorn == 2) {
+			this.random1 = getRandomInt(10, 90);
+			this.random2 = getRandomInt(10, 90);
+			this.random3 = getRandomInt(10, 90);
+			this.random4 = getRandomInt(10, 90);
+		} else if (this.howManyPopcorn == 3) {
+			this.random1 = getRandomInt(10, 90);
+			this.random2 = getRandomInt(10, 90);
+			this.random3 = getRandomInt(10, 90);
+			this.random4 = getRandomInt(10, 90);
+			this.random5 = getRandomInt(10, 90);
+			this.random6 = getRandomInt(10, 90);
+		}
+	},
+	data() {
+		return {
+			howManyPopcorn: getRandomInt(1, 4),
+			random1: 0,
+			random2: 0,
+			random3: -200,
+			random4: -200,
+			random5: -200,
+			random6: -200,
+			gadgetClass: "animate__animated animate__infinite K0-20-img",
+			animClasses: [
+				"animate__bounce",
+				"animate__heartBeat",
+				"animate__flip",
+				"animate__rubberBand",
+				"animate__swing",
+				"animate__tada",
+				"animate__jello",
+				"animate__wobble",
+			],
+			gadgets: [
+				"/images/objects/heart.png",
+				"/images/objects/schoggihase.png",
+				"/images/objects/dog.png",
+				"/images/objects/wolf.png",
+				"/images/objects/frog.png",
+				"/images/objects/rhino.png",
+				"/images/objects/lion.png",
+				"/images/objects/pig.png",
+				"/images/objects/elephant.png",
+			],
+			pathBgs: [
+				"/images/textures/stone1.jpg",
+				"/images/textures/snow.jpg",
+				"/images/textures/grass.jpg",
+				"/images/textures/dirt.jpg",
+			],
+			getSounds: [
+				"sheep",
+				"dog",
+				"lion",
+				"elephant",
+				"pig",
+				"frog",
+				"lion2",
+				"rhino",
+				"wolf",
+			],
+			r: getRandomInt(50, 255),
+			g: getRandomInt(50, 255),
+			b: getRandomInt(50, 255),
+		};
+	},
+	methods: {
+		getRandomInt(min, max) {
+			let temp = Math.floor(Math.random() * Math.floor(max - min));
+			return temp + Math.floor(min);
+		},
+		// randoSounds: function () {
+		// 	let sfx = this.randoSounds[getRandomInt(0,1)]
+		// 	$sounds.sfx.play({ interrupt: true })
+		// },
+		picker: function () {
+			var chosenNumber = Math.floor(Math.random() * this.getSounds.length);
+			this.chosenSound = $sounds.this.getSounds[chosenNumber].play({
+				interrupt: true,
+			});
+		},
+		consoli: function () {
+			let sfx = getRandomInt(0, 9);
+
+			if (sfx == 0) {
+				this.$sounds.sheep.play({ interrupt: true });
+			}
+			if (sfx == 1) {
+				this.$sounds.dog.play({ interrupt: true });
+			}
+			if (sfx == 2) {
+				this.$sounds.lion.play({ interrupt: true });
+			}
+			if (sfx == 3) {
+				this.$sounds.frog.play({ interrupt: true });
+			}
+			if (sfx == 4) {
+				this.$sounds.pig.play({ interrupt: true });
+			}
+			if (sfx == 5) {
+				this.$sounds.frog.play({ interrupt: true });
+			}
+			if (sfx == 6) {
+				this.$sounds.lion2.play({ interrupt: true });
+			}
+			if (sfx == 7) {
+				this.$sounds.rhino.play({ interrupt: true });
+			}
+			if (sfx == 8) {
+				this.$sounds.wolf.play({ interrupt: true });
+			}
+		},
+	},
+};
+</script>
+
+<style lang="scss">
+//animations
+
+@keyframes K0-20-path {
+	0% {
+		transform: scale(0);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+//classes container + grid
+
+.K0-20-container {
+	position: absolute;
+	display: grid;
+	grid-template-areas:
+		"main"
+		"menu";
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 100px;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: black;
+}
+
+.K0-20-main {
+	grid-area: main;
+	width: 100%;
+	height: 100%;
+
+	animation-name: K0-20-path;
+	animation-duration: 3s;
+
+	z-index: 0;
+	cursor: url("/images/icons/walkin.png"), auto;
+}
+
+.K0-20-menu {
+	grid-area: menu;
+	width: 100%;
+	height: 100%;
+
+	z-index: 0;
+}
+
+//classes main
+
+.K0-20-bg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	// background-color: rgb(100,100,100);
+
+	z-index: 1;
+	pointer-events: none;
+}
+
+.K0-20-path {
+	position: absolute;
+	width: 100%;
+	height: 90%;
+	left: 0;
+	top: 0;
+	background-image: url("~static/images/textures/stone1.jpg");
+	background-size: 300px;
+	clip-path: polygon(
+		0% 13%,
+		6% 15%,
+		15% 16%,
+		31% 12%,
+		40% 8%,
+		52% 5%,
+		58% 8%,
+		66% 15%,
+		82% 17%,
+		93% 16%,
+		100% 16%,
+		100% 55%,
+		92% 57%,
+		89% 48%,
+		78% 39%,
+		67% 36%,
+		63% 47%,
+		65% 65%,
+		69% 75%,
+		72% 85%,
+		76% 91%,
+		82% 72%,
+		83% 100%,
+		26% 100%,
+		25% 72%,
+		33% 89%,
+		37% 83%,
+		38% 68%,
+		37% 48%,
+		32% 35%,
+		25% 32%,
+		18% 33%,
+		12% 40%,
+		7% 46%,
+		0% 45%
+	);
+
+	z-index: 2;
+	pointer-events: none;
+}
+
+.K0-20-gadget {
+	position: absolute;
+	width: 6%;
+	height: 6%;
+	z-index: 3;
+	cursor: pointer;
+}
+
+.K0-20-wolke1 {
+	position: absolute;
+	width: 20%;
+	height: 34%;
+	pointer-events: none;
+
+	z-index: 5;
+}
+
+.K0-20-wolke2 {
+	position: absolute;
+	width: 15%;
+	height: 30%;
+	pointer-events: none;
+
+	z-index: 4;
+}
+
+.K0-20-wolke3 {
+	position: absolute;
+	width: 18%;
+	height: 30%;
+	transform: scaleX(-1);
+	pointer-events: none;
+
+	z-index: 4;
+}
+
+.K0-20-wolke4 {
+	position: absolute;
+	width: 20%;
+	height: 34%;
+	transform: scaleX(-1);
+	pointer-events: none;
+
+	z-index: 5;
+}
+
+.K0-20-img2 {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+}
+
+.K0-20-img {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top: 0;
+	cursor: pointer;
+}
+</style>
